@@ -1,0 +1,26 @@
+"""Functions required for database configuration."""
+
+import os
+
+from sqlmodel import Session, SQLModel, create_engine
+
+# Get database URL from environment variable or use default SQLite URL
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./tasks.db")
+
+# Create SQLModel engine
+engine = create_engine(
+    DATABASE_URL,
+    echo=True,  # Set to False in production
+    connect_args={"check_same_thread": False},  # Only needed for SQLite
+)
+
+
+def create_db_and_tables():
+    """Create all tables in the DB."""
+    SQLModel.metadata.create_all(engine)
+
+
+def get_session():
+    """Create a new DB session."""
+    with Session(engine) as session:
+        yield session
