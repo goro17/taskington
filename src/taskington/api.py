@@ -4,7 +4,8 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from database.config import create_db_and_tables
+from taskington.database.config import create_db_and_tables
+from taskington.routes.tasks import router as tasks_router
 
 
 # The @*.on_event decorator is deprecated, using lifespan instead
@@ -23,6 +24,8 @@ app = FastAPI(
     version="0.1.0",
     lifespan=lifespan,
 )
+
+app.include_router(tasks_router)
 
 
 @app.get("/")
